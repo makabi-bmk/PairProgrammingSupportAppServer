@@ -14,6 +14,10 @@ const io = new Server(httpServer, {
   
 io.on("connection", (socket) => {
     console.log("connected");
+
+    socket.on("start", () => {
+        console.log("start");
+    });
 });
   
 httpServer.listen(8080, () => {
