@@ -15,8 +15,10 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
     console.log("connected");
 
-    socket.on("start", () => {
+    // ゲームの開始準備
+    socket.on("start", (data) => {
         console.log("start");
+        console.log(data);
     });
 });
   
