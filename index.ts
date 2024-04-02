@@ -11,23 +11,43 @@ const io = new Server(httpServer, {
         methods: ["GET", "POST"]
     }
 });
-  
+
+// クライアントとの通信に使うコマンド一覧
+enum Command {
+    Start       = "start",
+    GetQuiz     = "get_quiz",
+    JudgeAns    = "judge_ans", 
+}
+
+
 io.on("connection", (socket) => {
     console.log("connected");
-    let state: boolean = false;
-    let data = "";
 
     // ゲームの開始準備
-    socket.on("start", (data) => {
+    socket.on(Command.Start, (data) => {
         try {
-            console.log("start");
-            console.log(data);
-            sendData(socket.id, "start", true, data);
+            sendData(socket.id, Command.Start, true, data);
         } catch (error) {
             // エラーだった場合はエラー文をクライアントに返す
             console.log(error);
             if (error instanceof Error) {
-                sendData(socket.id, "start", false, error.message);
+                sendData(socket.id, Command.Start, false, error.message);
+            }
+        }
+    });
+
+    // 問題の正誤判定
+    socket.on(Command.JudgeAns, (data) => {
+        try {
+            // TODO: ここに正誤判定のアルゴリズムを入れる
+            let judge = true;
+            let nextQuestionNum = 2;
+            sendData(socket.id, Command.JudgeAns, true, {"judge": judge, "next_question_num": nextQuestionNum});
+        } catch (error) {
+            // エラーだった場合はエラー文をクライアントに返す
+            console.log(error);
+            if (error instanceof Error) {
+                sendData(socket.id, Command.JudgeAns, false, error.message);
             }
         }
     });
