@@ -19,7 +19,6 @@ enum Command {
     JudgeAns    = "judge_ans", 
 }
 
-
 io.on("connection", (socket) => {
     console.log("connected");
 
@@ -42,7 +41,14 @@ io.on("connection", (socket) => {
             // TODO: ここに正誤判定のアルゴリズムを入れる
             let judge = true;
             let nextQuestionNum = 2;
-            sendData(socket.id, Command.JudgeAns, true, {"judge": judge, "next_question_num": nextQuestionNum});
+
+            // 正解の場合と不正解の場合の処理
+            if (judge) {
+                sendData(socket.id, Command.JudgeAns, true, {"judge": judge, "next_question_num": nextQuestionNum});
+            } else {
+                sendData(socket.id, Command.JudgeAns, true, {"judge": judge});
+            }
+
         } catch (error) {
             // エラーだった場合はエラー文をクライアントに返す
             console.log(error);
